@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup as BS
 from xls2xlsx import XLS2XLSX
 from openpyxl import load_workbook
 from prettytable import PrettyTable
+from datetime import datetime, date, time
+import os
 
 # Функции скачивания файла
 def download_file_from_google_drive(id, destination):
@@ -66,24 +68,28 @@ wb = load_workbook('plan.xlsx')
 th = []
 td = []
 
-sheet = wb['1 курс ИТ']
+sheet = wb['1 курс_МО']
 c = (sheet['O4'].value)
-for i in range(5, 41):
+
+day = (datetime.weekday(datetime.now())) * 6
+th = ['День недели', 'Время', 'Дисциплина', 'Преподователь', 'Тип', 'Кабинет']
+for i in range(day + 5, day + 11):
     temp_data = []
-    for j in [1, 2, 15, 16, 17, 18]:
+    for j in [1, 2, 11, 12, 13, 14]:
         data = sheet.cell(row=i, column=j).value
-        if i == 5:
-            th.append(data)
+        if data == None:
+            data = ' '
+        if i == day + 5:
+            # th.append(data)
             table = PrettyTable(th)
         else:
-            if data == 'None':
-                data = ' '
             temp_data.append(data)
-    if i != 5:
+    if i != day + 5:
         table.add_row(temp_data)
         
 # print(sheet.cell(row=4, column=15).value)
 print(table)
-
-    
+os.remove('1.xls')
+os.remove('plan.xlsx')
+print(input())
 
